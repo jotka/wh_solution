@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "ADDRESS")
-public class Address implements java.io.Serializable {
+public class Address {
 
     private int id;
     private String ip;
@@ -21,7 +21,7 @@ public class Address implements java.io.Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name="ADDRESS_ID")
+    @Column(name = "ADDRESS_ID")
     public int getId() {
         return id;
     }
@@ -47,5 +47,4 @@ public class Address implements java.io.Serializable {
     public void setIp(String ip) {
         this.ip = ip;
     }
-
 }

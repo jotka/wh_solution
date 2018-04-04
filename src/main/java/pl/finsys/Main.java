@@ -9,7 +9,6 @@ import java.util.Locale;
 /**
  * Usage:
  * java -jar target\parser-jar-with-dependencies.jar --startDate=2017-01-01.00:00:00 --duration=daily --threshold=500 --accesslog=.\access.log
- *
  */
 public class Main {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd.HH:mm:ss", Locale.US);
@@ -43,7 +42,8 @@ public class Main {
         try {
             cmd = cmdParser.parse(options, args);
             String dur = cmd.getOptionValue(OPTION_DURATION);
-            if (!OPTION_DAILY.equals(dur) && !OPTION_HOURLY.equals(dur)) throw new ParseException("Duration can be hourly or daily only.");
+            if (!OPTION_DAILY.equals(dur) && !OPTION_HOURLY.equals(dur))
+                throw new ParseException("Duration can be hourly or daily only.");
 
             Parser parser = new Parser(LocalDateTime.parse(cmd.getOptionValue(OPTION_START_DATE), DATE_TIME_FORMATTER),
                     Duration.valueOf(cmd.getOptionValue(OPTION_DURATION)),
@@ -56,10 +56,5 @@ public class Main {
             formatter.printHelp("log parser", options);
             System.exit(1);
         }
-
-
-
-
     }
-
 }

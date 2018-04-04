@@ -67,13 +67,6 @@ public class Parser {
         }
     }
 
-    private Stream<LogEntry> filterEntriesByDate(ArrayList<LogEntry> records) {
-        LocalDateTime endDateTime = duration.equals(Duration.hourly) ? startDate.plusHours(1) : startDate.plusDays(1);
-
-        return records.stream().filter(
-                record -> record.getTime().isAfter(startDate) && record.getTime().isBefore(endDateTime));
-    }
-
     private ArrayList<LogEntry> readFile(String fileName) {
         try (Stream<String> lines = Files.lines(Paths.get(fileName))) {
             lines.forEachOrdered(line -> records.add(parseEntry(line)));
@@ -81,6 +74,13 @@ public class Parser {
             logger.error("Cannot read the log file " + fileName);
         }
         return records;
+    }
+
+    private Stream<LogEntry> filterEntriesByDate(ArrayList<LogEntry> records) {
+        LocalDateTime endDateTime = duration.equals(Duration.hourly) ? startDate.plusHours(1) : startDate.plusDays(1);
+
+        return records.stream().filter(
+                record -> record.getTime().isAfter(startDate) && record.getTime().isBefore(endDateTime));
     }
 
     /**

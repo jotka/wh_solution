@@ -5,31 +5,26 @@ import java.time.LocalDateTime;
 /**
  * Log entry domain object
  */
-public class LogEntry {
+class LogEntry {
     private LocalDateTime time;
     private String ip;
     private int status;
 
-    public String getIp() {
+    String getIp() {
         return ip;
     }
 
-    public LogEntry(LocalDateTime time, String ip, int status) {
+    LogEntry(LocalDateTime time, String ip, int status) {
         this.time = time;
         this.ip = ip;
         this.status = status;
     }
 
-    public LocalDateTime getTime() {
+    LocalDateTime getTime() {
         return time;
     }
 
-    public int getStatus() {
+    int getStatus() {
         return status;
-    }
-
-    @Override
-    public String toString() {
-        return time + "|" + ip + "|" +  + status;
     }
 }
