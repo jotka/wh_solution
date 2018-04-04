@@ -48,12 +48,10 @@ public class Parser {
             filteredAboveThreshold.forEach((ip, logEntries) -> {
                 System.out.println(ip);
                 Address address = new Address(ip);
-                session.saveOrUpdate(address);
                 logEntries.forEach(logEntry -> {
-                    Log log = new Log(DATE_TIME_FORMATTER.format(logEntry.getTime()), logEntry.getStatus(), address);
-                    session.saveOrUpdate(log);
-                    address.getLogs().add(log);
+                    address.getLogs().add(new Log(DATE_TIME_FORMATTER.format(logEntry.getTime()), logEntry.getStatus(), address));
                 });
+                session.saveOrUpdate(address);
             });
 
             transaction.commit();

@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "LOG")
 public class Log {
-    private int id;
+    private int logId;
     private String dateTime;
     private int status;
     private Address address;
@@ -17,14 +17,14 @@ public class Log {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "LOG_ID", nullable = false)
-    public int getId() {
-        return id;
+    public int getLogId() {
+        return logId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setLogId(int logId) {
+        this.logId = logId;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

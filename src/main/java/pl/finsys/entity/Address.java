@@ -8,7 +8,7 @@ import java.util.Set;
 @Table(name = "ADDRESS")
 public class Address {
 
-    private int id;
+    private int addressId;
     private String ip;
     private Set<Log> logs = new HashSet<>(0);
 
@@ -20,17 +20,17 @@ public class Address {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ADDRESS_ID")
-    public int getId() {
-        return id;
+    public int getAddressId() {
+        return addressId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "address")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "address")
     public Set<Log> getLogs() {
         return logs;
     }
