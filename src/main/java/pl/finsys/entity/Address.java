@@ -48,18 +48,4 @@ public class Address implements java.io.Serializable {
         this.ip = ip;
     }
 
-    //    @ManyToMany(cascade = {CascadeType.ALL}, mappedBy = "ipAddresses")
-//    private List<StatusDescription> statusDescriptions = new ArrayList<>();
-//
-//    public List<StatusDescription> getStatusDescriptions() {
-//        return statusDescriptions;
-//    }
-//
-//    public void setStatusDescriptions(List<StatusDescription> statusDescriptions) {
-//        this.statusDescriptions = statusDescriptions;
-//    }
-//
-
-
-
 }

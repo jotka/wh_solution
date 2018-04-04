@@ -10,17 +10,15 @@ public class Log implements java.io.Serializable {
     private int status;
     private Address address;
 
-    public Log(String format, int status, Address address) {
-    }
-
-    public Log(String dateTime, int status) {
+    public Log(String dateTime, int status, Address address) {
         this.dateTime = dateTime;
         this.status = status;
+        this.address = address;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "LOG_ID")
+    @Column(name = "LOG_ID", nullable = false)
     public int getId() {
         return id;
     }
