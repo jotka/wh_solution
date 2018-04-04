@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import pl.finsys.entity.Address;
 import pl.finsys.entity.Log;
+import pl.finsys.entity.Status;
 
 public class Parser {
 
@@ -49,6 +50,8 @@ public class Parser {
                 System.out.println(ip);
                 Address address = new Address(ip);
                 logEntries.forEach(logEntry -> {
+                    Status status = new Status(logEntry.getStatus());
+                    session.saveOrUpdate(status);
                     address.getLogs().add(new Log(DATE_TIME_FORMATTER.format(logEntry.getTime()), logEntry.getStatus(), address));
                 });
                 session.saveOrUpdate(address);
