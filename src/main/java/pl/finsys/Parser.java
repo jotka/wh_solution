@@ -12,7 +12,8 @@ import java.util.stream.Stream;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import pl.finsys.entity.IpAddress;
+import pl.finsys.entity.Address;
+import pl.finsys.entity.Log;
 
 public class Parser {
 
@@ -46,11 +47,14 @@ public class Parser {
         try {
             filteredAboveThreshold.forEach((ip, logEntries) -> {
                 System.out.println(ip);
+                Address address = new Address(ip);
+                session.saveOrUpdate(address);
 
-                IpAddress ipAddress = new IpAddress(ip);
-                ipAddress.setLogEntries(logEntries);
-
-                session.saveOrUpdate(new IpAddress(ip));
+                logEntries.forEach(logEntry -> {
+                    Log log = new Log(DATE_TIME_FORMATTER.format(logEntry.getTime()), logEntry.getStatus(), address);
+                    address.getLogs().add(log);
+                    session.saveOrUpdate(log);
+                });
             });
 
             transaction.commit();
@@ -93,5 +97,4 @@ public class Parser {
 
         return new LogEntry(date, ip, status);
     }
-
 }
