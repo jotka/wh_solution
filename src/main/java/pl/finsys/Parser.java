@@ -49,11 +49,10 @@ public class Parser {
                 System.out.println(ip);
                 Address address = new Address(ip);
                 session.saveOrUpdate(address);
-
                 logEntries.forEach(logEntry -> {
                     Log log = new Log(DATE_TIME_FORMATTER.format(logEntry.getTime()), logEntry.getStatus(), address);
-                    address.getLogs().add(log);
                     session.saveOrUpdate(log);
+                    address.getLogs().add(log);
                 });
             });
 
