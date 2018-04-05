@@ -44,9 +44,7 @@ public class Parser {
             filteredAboveThreshold.forEach((ip, logEntries) -> {
                 System.out.println(ip);
                 Address address = new Address(ip);
-                logEntries.forEach(logEntry -> {
-                    address.getLogs().add(new Log(ParserTools.DATE_TIME_FORMATTER.format(logEntry.getTime()), logEntry.getStatus(), address));
-                });
+                logEntries.forEach(logEntry -> address.getLogs().add(new Log(ParserTools.DATE_TIME_FORMATTER.format(logEntry.getTime()), logEntry.getStatus(), address)));
                 session.saveOrUpdate(address);
             });
 
