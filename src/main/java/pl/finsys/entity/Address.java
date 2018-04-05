@@ -4,6 +4,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Address entity
+ */
 @Entity
 @Table(name = "ADDRESS")
 public class Address {

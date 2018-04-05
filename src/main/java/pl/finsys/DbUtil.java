@@ -3,6 +3,9 @@ package pl.finsys;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
+/**
+ * Handles the database session
+ */
 public class DbUtil {
 
     private static final SessionFactory sessionFactory = buildSessionFactory();

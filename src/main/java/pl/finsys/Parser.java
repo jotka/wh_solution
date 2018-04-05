@@ -13,19 +13,22 @@ import org.hibernate.Transaction;
 import pl.finsys.entity.Address;
 import pl.finsys.entity.Log;
 
+/**
+ * Parses the log file and outputs the IP entries that are above the threshold to the console.
+ * Stores those entries to database.
+ */
 public class Parser {
-
     private final LocalDateTime startDate;
     private final Duration duration;
-    private final int treshold;
+    private final int threshold;
 
     private ArrayList<LogEntry> records = new ArrayList<>();
     private final static Logger logger = Logger.getLogger(Parser.class);
 
-    public Parser(LocalDateTime startDate, Duration duration, int treshold) {
+    public Parser(LocalDateTime startDate, Duration duration, int threshold) {
         this.startDate = startDate;
         this.duration = duration;
-        this.treshold = treshold;
+        this.threshold = threshold;
     }
 
     public void process(String filename) {
@@ -33,7 +36,7 @@ public class Parser {
         Stream<LogEntry> filteredByDate = ParserTools.filterEntriesByDate(records, duration, startDate);
         Map<String, List<LogEntry>> groupped = ParserTools.groupByIP(filteredByDate);
 
-        Map<String, List<LogEntry>> filteredAboveThreshold = ParserTools.filterAboveThreshold(groupped, treshold);
+        Map<String, List<LogEntry>> filteredAboveThreshold = ParserTools.filterAboveThreshold(groupped, threshold);
 
         Session session = DbUtil.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();

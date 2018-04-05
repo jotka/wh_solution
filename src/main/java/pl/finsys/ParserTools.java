@@ -27,6 +27,14 @@ public class ParserTools {
         return new LogEntry(date, ip, status);
     }
 
+    /**
+     * Filters log entries by date
+     *
+     * @param records   records to filter out
+     * @param duration  hourly (start date to start date + 1 hour) and daily (start date to start date + 1 day)
+     * @param startDate start date
+     * @return a stream of entries to process
+     */
     public static Stream<LogEntry> filterEntriesByDate(ArrayList<LogEntry> records, Duration duration, LocalDateTime startDate) {
         LocalDateTime endDateTime = duration.equals(Duration.hourly) ? startDate.plusHours(1) : startDate.plusDays(1);
 
@@ -34,14 +42,27 @@ public class ParserTools {
                 record -> record.getTime().isAfter(startDate) && record.getTime().isBefore(endDateTime));
     }
 
+    /**
+     * Groups a stream of log entries by IP
+     *
+     * @param entries stream to process
+     * @return groupped entries
+     */
     public static Map<String, List<LogEntry>> groupByIP(Stream<LogEntry> entries) {
         return entries.collect(Collectors.groupingBy(LogEntry::getIp, Collectors.toList()));
     }
 
-    public static Map<String, List<LogEntry>> filterAboveThreshold(Map<String, List<LogEntry>> entries, int treshold) {
+    /**
+     * Filters groupped entries by the treshold
+     *
+     * @param entries  entries to filter
+     * @param threshold the threshold to filter by
+     * @return filtered entries
+     */
+    public static Map<String, List<LogEntry>> filterAboveThreshold(Map<String, List<LogEntry>> entries, int threshold) {
         return entries.entrySet()
                 .stream()
-                .filter(e -> e.getValue().size() > treshold)
+                .filter(e -> e.getValue().size() > threshold)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 }

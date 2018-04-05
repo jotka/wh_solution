@@ -8,7 +8,15 @@ import java.util.Locale;
 
 /**
  * Usage:
- * java -jar target\parser-jar-with-dependencies.jar --startDate=2017-01-01.00:00:00 --duration=daily --threshold=500 --accesslog=.\access.log
+ * java -jar target\parser-jar-with-dependencies.jar --startDate=2017-01-01.00:00:00 --duration=daily --threshold=500 --accesslog=./access.log
+ * The tool will parse the log file and output IP entries that are above the threshold to the console.
+ * This will also stores those entries in the database tables ADDRESS and LOG.
+ *
+ * Options are:
+ * --accesslog is the path to the log file, for example ./access.log
+ * --startDate is the start date to begin with
+ * --duration can be hourly or daily.
+ * --threshold is the threshold of the entries to filter by
  */
 public class Main {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd.HH:mm:ss", Locale.US);
@@ -28,11 +36,11 @@ public class Main {
         Option duration = new Option("d", OPTION_DURATION, true, "duration (hourly|daily)");
         duration.setRequired(true);
         options.addOption(duration);
-        Option treshold = new Option("t", OPTION_THRESHOLD, true, "threshold (integer)");
-        treshold.setRequired(true);
-        options.addOption(treshold);
+        Option threshold = new Option("t", OPTION_THRESHOLD, true, "threshold (integer)");
+        threshold.setRequired(true);
+        options.addOption(threshold);
         Option logPath = new Option("a", OPTION_ACCESSLOG, true, "/path/to/file");
-        treshold.setRequired(true);
+        threshold.setRequired(true);
         options.addOption(logPath);
 
         CommandLineParser cmdParser = new DefaultParser();
