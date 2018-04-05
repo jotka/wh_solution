@@ -15,6 +15,5 @@
         <property name="hbm2ddl.auto">update</property>
         <mapping class="pl.finsys.entity.Address"/>
         <mapping class="pl.finsys.entity.Log" />
-        <mapping class="pl.finsys.entity.Status" />
     </session-factory>
 </hibernate-configuration>
