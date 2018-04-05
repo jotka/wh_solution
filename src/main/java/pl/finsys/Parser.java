@@ -33,6 +33,7 @@ public class Parser {
     public void process(String filename) {
         logger.info("Processing file {}, with start date {}, duration {}, threshold {}.",
                 filename, ParserTools.DATE_TIME_FORMATTER.format(startDate), duration, threshold);
+
         Database database = new Database();
         try {
             List<LogEntry> records = readLog(filename);
