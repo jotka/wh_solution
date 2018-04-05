@@ -1,29 +1,28 @@
 package pl.finsys;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Stream;
 
-import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import pl.finsys.entity.Address;
-import pl.finsys.entity.Log;
 
 /**
- * Parses the log file and outputs the IP entries that are above the threshold to the console.
- * Stores those entries to database.
+ * Parses the log file and stores it in the database (table LOG).
+ * Outputs the IP entries that are above the threshold to the console.
+ * Stores the entries above the threshold in the database (table THRESHOLD_LOG)
  */
 public class Parser {
     private final LocalDateTime startDate;
     private final Duration duration;
     private final int threshold;
 
-    private ArrayList<LogEntry> records = new ArrayList<>();
-    private final static Logger logger = Logger.getLogger(Parser.class);
+    private final static Logger logger = LoggerFactory.getLogger(Parser.class);
 
     public Parser(LocalDateTime startDate, Duration duration, int threshold) {
         this.startDate = startDate;
@@ -32,38 +31,44 @@ public class Parser {
     }
 
     public void process(String filename) {
-        records = readFile(filename);
-        Stream<LogEntry> filteredByDate = ParserTools.filterEntriesByDate(records, duration, startDate);
-        Map<String, List<LogEntry>> groupped = ParserTools.groupByIP(filteredByDate);
-
-        Map<String, List<LogEntry>> filteredAboveThreshold = ParserTools.filterAboveThreshold(groupped, threshold);
-
-        Session session = DbUtil.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
+        logger.info("Processing file {}, with start date {}, duration {}, threshold {}.",
+                filename, ParserTools.DATE_TIME_FORMATTER.format(startDate), duration, threshold);
+        Database database = new Database();
         try {
-            filteredAboveThreshold.forEach((ip, logEntries) -> {
-                System.out.println(ip);
-                Address address = new Address(ip);
-                logEntries.forEach(logEntry -> address.getLogs().add(new Log(ParserTools.DATE_TIME_FORMATTER.format(logEntry.getTime()), logEntry.getStatus(), address)));
-                session.saveOrUpdate(address);
-            });
+            List<LogEntry> records = readLog(filename);
 
-            transaction.commit();
-        } catch (Exception ex) {
-            transaction.rollback();
-            logger.error(ex.getMessage());
-            ex.printStackTrace();
+            database.connect();
+            database.saveLog(records);
+
+            Stream<LogEntry> filteredByDate = ParserTools.filterEntriesByDate(records, duration, startDate);
+            Map<String, List<LogEntry>> grouped = ParserTools.groupByIP(filteredByDate);
+
+            Map<String, List<LogEntry>> filteredAboveThreshold = ParserTools.filterAboveThreshold(grouped, threshold);
+
+            filteredAboveThreshold.forEach((ip, logEntries) -> {
+                logger.info(ip);
+                try {
+                    database.saveThresholdLog(startDate, threshold, duration.name(), logEntries);
+                } catch (SQLException e) {
+                    logger.error("Unable to save threshold log.");
+                }
+            });
+        } catch (Exception exc) {
+            logger.error(exc.getMessage());
         } finally {
-            session.close();
+            database.disconnect();
         }
+        logger.info("Processing done.");
     }
 
-    private ArrayList<LogEntry> readFile(String fileName) {
+    private List<LogEntry> readLog(String fileName) {
+        List<LogEntry> records = new ArrayList<>();
         try (Stream<String> lines = Files.lines(Paths.get(fileName))) {
             lines.forEachOrdered(line -> records.add(ParserTools.parseEntry(line)));
         } catch (IOException e) {
             logger.error("Cannot read the log file " + fileName);
         }
+
         return records;
     }
 }

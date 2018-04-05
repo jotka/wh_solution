@@ -9,7 +9,9 @@ import java.util.Locale;
 /**
  * Usage:
  * java -jar target\parser-jar-with-dependencies.jar --startDate=2017-01-01.00:00:00 --duration=daily --threshold=500 --accesslog=./access.log
- * The tool will parse the log file and output IP entries that are above the threshold to the console.
+ *
+ * The tool will parse the log file and store it in the database table LOG.
+ * It output IP entries that are above the threshold to the console and load those entries to the separate table LOG_TRESHOLD.
  * This will also stores those entries in the database tables ADDRESS and LOG.
  *
  * Options are:

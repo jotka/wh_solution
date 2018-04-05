@@ -11,6 +11,7 @@ java -jar target\parser-jar-with-dependencies.jar --startDate=2017-01-01.15:00:0
 
 ### database
 Database schema needs to be created from src/main/sql/schema.sql
+The database url and credentials are in the src/main/resources/db.properties file.
 This contains also the http error codes dictionary (table HTTP_STATUS)
 
 ### database structure

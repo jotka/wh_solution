@@ -2,7 +2,6 @@ package pl.finsys;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -22,9 +21,10 @@ public class ParserTools {
         List<String> lineItems = Stream.of(line.split("\\|")).collect(Collectors.toList());
         LocalDateTime date = LocalDateTime.parse(lineItems.get(0), DATE_TIME_FORMATTER);
         String ip = lineItems.get(1);
+        String method = lineItems.get(2);
         int status = Integer.parseInt(lineItems.get(3));
-
-        return new LogEntry(date, ip, status);
+        String userAgent = lineItems.get(4);
+        return new LogEntry(date, ip, status, method, userAgent);
     }
 
     /**
@@ -35,7 +35,7 @@ public class ParserTools {
      * @param startDate start date
      * @return a stream of entries to process
      */
-    public static Stream<LogEntry> filterEntriesByDate(ArrayList<LogEntry> records, Duration duration, LocalDateTime startDate) {
+    public static Stream<LogEntry> filterEntriesByDate(List<LogEntry> records, Duration duration, LocalDateTime startDate) {
         LocalDateTime endDateTime = duration.equals(Duration.hourly) ? startDate.plusHours(1) : startDate.plusDays(1);
 
         return records.stream().filter(
